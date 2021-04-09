@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, url_for
 from flask import jsonify, make_response
 from flask_restful import Api
@@ -35,4 +36,8 @@ def main():
 api.add_resource(NewsResource, '/api/v2/news/<int:news_id>')
 
 if __name__ == '__main__':
-    main()
+    if 'HEROKU' in os.environ:
+        port = int(os.environ.get("PORT", 5000))
+        app.run(host='0.0.0.0', port=port)
+    else:
+        app.run()
