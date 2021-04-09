@@ -47,10 +47,11 @@ def print_users():
         print(user)
 
 
-if __name__ == "__main__":
-    db_session.global_init("db/blogs.db")
+# if __name__ == "__main__":
 
-    print_users()
-    fill_base()
-    print('-----')
-    print_users()
+# db_session.global_init()
+
+# print_users()
+fill_base()
+# print('-----')
+# print_users()

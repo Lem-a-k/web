@@ -6,6 +6,7 @@ from flask_restful import Api
 from data import db_session, news_api
 from data.news import News
 from api_2.news_resource import NewsResource
+from data.users import User
 
 app = Flask(__name__)
 api = Api(app)
@@ -27,17 +28,22 @@ def not_found(error):
 
 
 def main():
-    db_session.global_init("db/blogs.db")
+    db_session.global_init()
+
+    session = db_session.create_session()
+    if not session.query(User).first():
+        import fill_base
+
     app.register_blueprint(news_api.blueprint)
-    app.run()
+    if 'HEROKU' in os.environ:
+        port = int(os.environ.get("PORT", 5000))
+        app.run(host='0.0.0.0', port=port)
+    else:
+        app.run()
 
 
 # для одного объекта
 api.add_resource(NewsResource, '/api/v2/news/<int:news_id>')
 
 if __name__ == '__main__':
-    if 'HEROKU' in os.environ:
-        port = int(os.environ.get("PORT", 5000))
-        app.run(host='0.0.0.0', port=port)
-    else:
-        app.run()
+    main()
